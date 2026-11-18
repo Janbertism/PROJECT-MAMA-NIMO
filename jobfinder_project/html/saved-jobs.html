@@ -1,0 +1,289 @@
+<!-- File: html/saved-jobs.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Saved Jobs & Applications — JobFinder Near Me</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%232557a7'><path d='M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 010-5 2.5 2.5 0 010 5z'/></svg>" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="../css/components.css" />
+  <style>
+    :root {
+      --primary-gradient: linear-gradient(135deg, #2557a7 0%, #3b82f6 100%);
+      --shadow-elevation: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
+    }
+    html, body {
+      min-height: 100vh;
+      margin: 0;
+      background-color: var(--bg-main, #f8fafc);
+      font-family: 'Inter', sans-serif;
+    }
+    html.dark-mode,
+    body.dark-mode {
+      background-color: #0f172a !important;
+    }
+    h1, h2, h3, .brand-name {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+    .verified-badge,
+    .badge-verified,
+    [class*="verified"] {
+      display: none !important;
+    }
+    .page-header-card {
+      background: var(--primary-gradient);
+      color: white;
+      padding: 2.5rem;
+      border-radius: 20px;
+      margin-bottom: 2rem;
+      box-shadow: 0 20px 25px -5px rgba(37, 87, 167, 0.25);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+    }
+    .page-header-card h1 {
+      font-size: 1.85rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.35rem;
+    }
+    .page-header-card p {
+      opacity: 0.9;
+      font-size: 0.95rem;
+    }
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.25rem;
+      margin-bottom: 2rem;
+    }
+    .stat-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 1.25rem 1.5rem;
+      box-shadow: var(--shadow-elevation);
+    }
+    .stat-label {
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--text-secondary);
+    }
+    .stat-value {
+      font-size: 1.75rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      margin-top: 0.25rem;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+    .saved-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+      gap: 1.5rem;
+    }
+    .tracker-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 18px;
+      padding: 1.5rem;
+      box-shadow: var(--shadow-elevation);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 1.25rem;
+    }
+    .status-select {
+      padding: 0.45rem 0.75rem;
+      border-radius: 10px;
+      border: 1px solid var(--border-color);
+      background: var(--bg-subtle);
+      color: var(--text-primary);
+      font-family: inherit;
+      font-weight: 600;
+      font-size: 0.85rem;
+      cursor: pointer;
+      outline: none;
+    }
+  </style>
+</head>
+<body>
+  <header class="navbar" style="backdrop-filter: blur(10px); background: var(--bg-card); border-bottom: 1px solid var(--border-color);">
+    <div class="nav-brand">
+      <span class="brand-name">JobFinder <strong>Near Me</strong></span>
+    </div>
+    <nav class="nav-links" style="display: flex; align-items: center; gap: 1rem;">
+      <a href="../index.html" class="nav-link">Find Jobs</a>
+      <a href="saved-jobs.html" class="nav-link active">
+        Saved Jobs <span id="saved-count-badge" class="badge">0</span>
+      </a>
+      <a href="employer-portal.html" class="nav-link">Post a Job</a>
+
+      <div id="auth-container" style="display: flex; align-items: center; gap: 0.5rem;">
+        <a href="login.html" class="btn-secondary" style="padding: 0.5rem 1rem; border-radius: 10px; font-weight: 600; font-size: 0.88rem; text-decoration: none; display: inline-flex; align-items: center;">Sign In</a>
+      </div>
+
+      <button id="theme-toggle" class="icon-btn" title="Toggle Dark Mode" style="font-size: 0.85rem; font-weight: 600;">Theme</button>
+    </nav>
+  </header>
+
+  <main class="container" style="max-width: 1200px; padding: 2.5rem 1.5rem 5rem;">
+    <div class="page-header-card">
+      <div>
+        <h1>Saved Jobs & Application Tracker</h1>
+        <p>Keep track of bookmarked openings across Metro Cebu and monitor your application progress.</p>
+      </div>
+      <a href="../index.html" style="background: white; color: #2557a7; padding: 0.75rem 1.35rem; border-radius: 12px; font-weight: 700; text-decoration: none; font-size: 0.92rem;">Browse More Jobs</a>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat-box">
+        <div class="stat-label">Total Saved</div>
+        <div class="stat-value" id="stat-total">0</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-label">Applied</div>
+        <div class="stat-value" id="stat-applied" style="color: #2557a7;">0</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-label">Interviewing</div>
+        <div class="stat-value" id="stat-interview" style="color: #059669;">0</div>
+      </div>
+    </div>
+
+    <div id="saved-jobs-container" class="saved-grid"></div>
+  </main>
+
+  <script src="../js/core/utils.js"></script>
+  <script src="../js/core/storage.js"></script>
+  <script src="../js/core/api.js"></script>
+  <script src="../js/core/auth.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      // Theme Sync
+      const themeBtn = document.getElementById("theme-toggle");
+      const isStoredDark = (window.SavedStorage && SavedStorage.getTheme && SavedStorage.getTheme() === "dark") || localStorage.getItem("jf_theme") === "dark";
+      if (isStoredDark) {
+        document.documentElement.classList.add("dark-mode");
+        document.body.classList.add("dark-mode");
+        themeBtn.textContent = "Light";
+      } else {
+        themeBtn.textContent = "Dark";
+      }
+
+      themeBtn.addEventListener("click", () => {
+        const isDark = document.documentElement.classList.toggle("dark-mode");
+        document.body.classList.toggle("dark-mode", isDark);
+        const themeVal = isDark ? "dark" : "light";
+        if (window.SavedStorage && SavedStorage.setTheme) SavedStorage.setTheme(themeVal);
+        localStorage.setItem("jf_theme", themeVal);
+        themeBtn.textContent = isDark ? "Light" : "Dark";
+      });
+
+      function renderSavedJobs() {
+        const savedMap = window.SavedStorage ? SavedStorage.load() : {};
+        const savedIds = Object.keys(savedMap);
+
+        const badge = document.getElementById("saved-count-badge");
+        if (badge) badge.textContent = savedIds.length;
+
+        // Fetch jobs using your exact JobAPI.fetchJobs() method
+        const allJobs = window.JobAPI && typeof JobAPI.fetchJobs === "function" ? JobAPI.fetchJobs() : [];
+        const jobMap = new Map();
+        allJobs.forEach((job) => {
+          if (job && job.id !== undefined) jobMap.set(String(job.id), job);
+        });
+
+        const savedJobs = savedIds.map((id) => jobMap.get(String(id))).filter(Boolean);
+
+        let appliedCount = 0;
+        let interviewCount = 0;
+        savedIds.forEach((id) => {
+          const st = savedMap[id];
+          if (st === "Applied") appliedCount++;
+          if (st === "Interviewing") interviewCount++;
+        });
+
+        document.getElementById("stat-total").textContent = savedJobs.length;
+        document.getElementById("stat-applied").textContent = appliedCount;
+        document.getElementById("stat-interview").textContent = interviewCount;
+
+        const container = document.getElementById("saved-jobs-container");
+        if (!savedJobs.length) {
+          container.innerHTML = `
+            <div style="grid-column: 1 / -1; text-align: center; padding: 4rem 1.5rem; background: var(--bg-card); border: 1px dashed var(--border-color); border-radius: 20px;">
+              <h3 style="font-size: 1.25rem; font-weight: 800; color: var(--text-primary); margin-bottom: 0.5rem;">No saved jobs yet</h3>
+              <p style="color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 1.5rem;">Bookmark openings from the job feed to compare roles and track your applications here.</p>
+              <a href="../index.html" class="btn-primary" style="text-decoration: none; padding: 0.75rem 1.5rem; border-radius: 12px; font-weight: 700; background: #2557a7;">Explore Local Jobs</a>
+            </div>
+          `;
+          return;
+        }
+
+        container.innerHTML = savedJobs.map((job) => {
+          const currentStatus = savedMap[job.id] && savedMap[job.id] !== "saved" ? savedMap[job.id] : "Bookmarked";
+          return `
+            <div class="tracker-card">
+              <div>
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem;">
+                  <div>
+                    <h3 style="font-size: 1.15rem; font-weight: 800; color: var(--text-primary); margin-bottom: 0.25rem;">${job.title}</h3>
+                    <div style="font-size: 0.9rem; font-weight: 600; color: var(--text-secondary);">${job.company} &bull; ${job.locationName || job.location || "Metro Cebu"}</div>
+                  </div>
+                  <button class="remove-saved-btn" data-id="${job.id}" style="background: none; border: none; color: #dc2626; font-size: 0.82rem; font-weight: 700; cursor: pointer;">Remove</button>
+                </div>
+
+                <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 1rem;">
+                  <span style="background: var(--bg-subtle); border: 1px solid var(--border-color); padding: 4px 10px; border-radius: 8px; font-size: 0.8rem; font-weight: 600;">${job.setup || "Onsite"}</span>
+                  <span style="background: var(--bg-subtle); border: 1px solid var(--border-color); padding: 4px 10px; border-radius: 8px; font-size: 0.8rem; font-weight: 600;">${job.type || "Full-time"}</span>
+                  <span style="background: var(--accent-soft); color: var(--accent); padding: 4px 10px; border-radius: 8px; font-size: 0.8rem; font-weight: 700;">${job.salaryMin ? `PHP ${job.salaryMin.toLocaleString()} - ${job.salaryMax.toLocaleString()}` : (job.salary || "Competitive")}</span>
+                </div>
+              </div>
+
+              <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 1rem; border-top: 1px solid var(--border-color);">
+                <label style="font-size: 0.82rem; font-weight: 700; color: var(--text-secondary);">Status:</label>
+                <select class="status-select" data-id="${job.id}">
+                  <option value="Bookmarked" ${currentStatus === "Bookmarked" ? "selected" : ""}>Bookmarked</option>
+                  <option value="Applied" ${currentStatus === "Applied" ? "selected" : ""}>Applied</option>
+                  <option value="Interviewing" ${currentStatus === "Interviewing" ? "selected" : ""}>Interviewing</option>
+                  <option value="Offer Received" ${currentStatus === "Offer Received" ? "selected" : ""}>Offer Received</option>
+                </select>
+              </div>
+            </div>
+          `;
+        }).join("");
+
+        container.querySelectorAll(".status-select").forEach((sel) => {
+          sel.addEventListener("change", (e) => {
+            const id = e.target.dataset.id;
+            const val = e.target.value;
+            if (window.SavedStorage) {
+              SavedStorage.setStatus(id, val === "Bookmarked" ? "saved" : val);
+              renderSavedJobs();
+            }
+          });
+        });
+
+        container.querySelectorAll(".remove-saved-btn").forEach((btn) => {
+          btn.addEventListener("click", (e) => {
+            const id = e.target.dataset.id;
+            if (window.SavedStorage) {
+              SavedStorage.setStatus(id, null);
+              renderSavedJobs();
+            }
+          });
+        });
+      }
+
+      renderSavedJobs();
+    });
+  </script>
+</body>
+</html>

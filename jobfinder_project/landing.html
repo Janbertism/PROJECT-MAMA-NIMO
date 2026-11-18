@@ -1,0 +1,284 @@
+<!-- File: landing.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JobSearch | JobFinder Near Me</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%232557a7'><path d='M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 010-5 2.5 2.5 0 010 5z'/></svg>" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <style>
+    html, body {
+      min-height: 100vh;
+      margin: 0;
+      background-color: var(--bg-main, #ffffff);
+      font-family: 'Inter', sans-serif;
+      display: flex;
+      flex-direction: column;
+    }
+    body.dark-mode {
+      background-color: #0f172a !important;
+    }
+    .landing-main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1.25rem 5rem;
+      max-width: 920px;
+      width: 100%;
+      margin: 0 auto;
+      box-sizing: border-box;
+    }
+    .search-alert-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      color: #991b1b;
+      padding: 0.65rem 1.25rem;
+      border-radius: 12px;
+      font-size: 0.88rem;
+      font-weight: 500;
+      margin-bottom: 1.5rem;
+    }
+    .search-alert-pill.hidden {
+      display: none;
+    }
+    .alert-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 18px;
+      height: 18px;
+      background: #991b1b;
+      color: white;
+      border-radius: 50%;
+      font-size: 0.72rem;
+      font-weight: 800;
+    }
+    .unified-search-bar {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      max-width: 820px;
+      background: var(--bg-card, #ffffff);
+      border: 1px solid #94a3b8;
+      border-radius: 14px;
+      padding: 0.45rem 0.5rem 0.45rem 1rem;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+      margin-bottom: 3rem;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .unified-search-bar:focus-within {
+      border-color: #2557a7;
+      box-shadow: 0 6px 20px rgba(37, 87, 167, 0.12);
+    }
+    .search-segment {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      flex: 1;
+      padding: 0.4rem 0.5rem;
+      color: var(--text-secondary);
+    }
+    .search-segment input,
+    .search-segment select {
+      width: 100%;
+      border: none;
+      background: transparent;
+      color: var(--text-primary);
+      font-family: inherit;
+      font-size: 0.95rem;
+      outline: none;
+    }
+    .search-divider {
+      width: 1px;
+      height: 28px;
+      background: var(--border-color, #cbd5e1);
+      margin: 0 0.5rem;
+    }
+    .btn-find-jobs {
+      background: #2557a7;
+      color: #ffffff;
+      border: none;
+      padding: 0.8rem 1.45rem;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.15s ease;
+    }
+    .btn-find-jobs:hover {
+      background: #1d4ed8;
+    }
+    .brand-hero {
+      text-align: center;
+      max-width: 540px;
+    }
+    .brand-wordmark {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 2.6rem;
+      font-weight: 800;
+      color: #2557a7;
+      letter-spacing: -0.04em;
+      margin-bottom: 0.5rem;
+    }
+    body.dark-mode .brand-wordmark {
+      color: #60a5fa;
+    }
+    .brand-hero h2 {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 1.55rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      margin: 0.25rem 0 0.65rem;
+      letter-spacing: -0.02em;
+    }
+    .brand-hero p {
+      font-size: 0.96rem;
+      color: var(--text-secondary);
+      line-height: 1.55;
+      margin: 0 auto 1.75rem;
+    }
+    .btn-get-started {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      background: #2557a7;
+      color: #ffffff;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 1rem;
+      padding: 0.85rem 2.25rem;
+      border-radius: 10px;
+      transition: background 0.15s ease, transform 0.15s ease;
+    }
+    .btn-get-started:hover {
+      background: #1d4ed8;
+      transform: translateY(-1px);
+    }
+    @media (max-width: 680px) {
+      .unified-search-bar {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 0.75rem;
+        gap: 0.5rem;
+      }
+      .search-divider {
+        width: 100%;
+        height: 1px;
+        margin: 0.25rem 0;
+      }
+      .btn-find-jobs {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="navbar" style="background: transparent; border-bottom: 1px solid var(--border-color); position: relative; z-index: 50;">
+    <div class="nav-brand">
+      <span class="brand-name">JobFinder <strong>Near Me</strong></span>
+    </div>
+    <nav class="nav-links" style="display: flex; align-items: center; gap: 1.25rem; position: relative; z-index: 60;">
+      <a href="index.html" class="nav-link">Browse Jobs</a>
+      <a href="html/employer-portal.html" class="nav-link">Post a Job</a>
+      <span style="color: var(--border-color);">|</span>
+      
+      <!-- Perfectly sized Sign In button matching the dark mode toggle width -->
+      <a href="html/login.html" id="sign-in-btn" class="icon-btn" style="font-size: 0.85rem; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; padding: 0.4rem 0.75rem; white-space: nowrap; width: auto; border: 1px solid var(--border-color); border-radius: 8px; background: var(--bg-card); color: var(--text-primary); pointer-events: auto; cursor: pointer;">Sign In</a>
+      
+      <button id="theme-toggle" class="icon-btn" title="Toggle Dark Mode" style="font-size: 0.85rem; font-weight: 600; pointer-events: auto; cursor: pointer; position: relative; z-index: 70;">Dark</button>
+    </nav>
+  </header>
+
+  <main class="landing-main">
+    <div id="search-alert" class="search-alert-pill hidden">
+      <span class="alert-icon">!</span>
+      <span>Enter a job title or select a Metro Cebu location to start a search</span>
+    </div>
+
+    <form id="landing-search-form" class="unified-search-bar">
+      <div class="search-segment">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" id="landing-keyword" placeholder="Job title, keywords, or company" />
+      </div>
+
+      <div class="search-divider"></div>
+
+      <div class="search-segment">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        <select id="landing-location">
+          <option value="">City, hub, or "remote" in Metro Cebu</option>
+          <option value="10.3308,123.9063">Cebu IT Park, Lahug</option>
+          <option value="10.3089,124.0016">Mactan Newtown, Lapu-Lapu</option>
+          <option value="10.3181,123.9056">Cebu Business Park (Ayala)</option>
+          <option value="10.3333,123.9333">Mandaue City Centro</option>
+          <option value="10.3236,123.9794">MEPZ 1, Lapu-Lapu</option>
+        </select>
+      </div>
+
+      <button type="submit" class="btn-find-jobs">Find jobs</button>
+    </form>
+
+    <div class="brand-hero">
+      <div class="brand-wordmark">JobFinder</div>
+      <h2>Your next job starts here</h2>
+      <p>Create an account or sign in to see your personalized local job recommendations across Metro Cebu.</p>
+      <a href="html/login.html" class="btn-get-started">Get Started &rarr;</a>
+    </div>
+  </main>
+
+  <script src="js/core/storage.js"></script>
+  <script>
+    if (localStorage.getItem("jf_user_profile")) {
+      window.location.href = "index.html";
+    }
+
+    const themeBtn = document.getElementById("theme-toggle");
+    const isStoredDark = (window.SavedStorage && SavedStorage.getTheme() === "dark") || localStorage.getItem("jf_theme") === "dark";
+    if (isStoredDark) {
+      document.documentElement.classList.add("dark-mode");
+      document.body.classList.add("dark-mode");
+      themeBtn.textContent = "Light";
+    } else {
+      themeBtn.textContent = "Dark";
+    }
+    themeBtn.addEventListener("click", () => {
+      const isDark = document.documentElement.classList.toggle("dark-mode");
+      document.body.classList.toggle("dark-mode", isDark);
+      const themeVal = isDark ? "dark" : "light";
+      if (window.SavedStorage) SavedStorage.setTheme(themeVal);
+      localStorage.setItem("jf_theme", themeVal);
+      themeBtn.textContent = isDark ? "Light" : "Dark";
+    });
+
+    document.getElementById("landing-search-form").addEventListener("submit", (e) => {
+      e.preventDefault();
+      const keyword = document.getElementById("landing-keyword").value.trim();
+      const location = document.getElementById("landing-location").value;
+      const alertBox = document.getElementById("search-alert");
+
+      if (!keyword && !location) {
+        alertBox.classList.remove("hidden");
+        return;
+      }
+
+      alertBox.classList.add("hidden");
+      const params = new URLSearchParams();
+      if (keyword) params.set("q", keyword);
+      if (location) params.set("loc", location);
+      window.location.href = "index.html?" + params.toString();
+    });
+  </script>
+</body>
+</html>

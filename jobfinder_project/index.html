@@ -1,0 +1,296 @@
+<!-- File: index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JobFinder Near Me — Metro Cebu</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%232557a7'><path d='M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 010-5 2.5 2.5 0 010 5z'/></svg>" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <style>
+    :root {
+      --primary-gradient: linear-gradient(135deg, #2557a7 0%, #3b82f6 100%);
+      --shadow-elevation: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+    }
+    body {
+      background-color: var(--bg-main, #f8fafc);
+      font-family: 'Inter', sans-serif;
+    }
+    h1, h2, h3, .brand-name {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+    .verified-badge,
+    .badge-verified,
+    [class*="verified"] {
+      display: none !important;
+    }
+    .hero-banner {
+      background: var(--primary-gradient);
+      color: white;
+      padding: 2.75rem 2.5rem;
+      border-radius: 20px;
+      margin-bottom: 2rem;
+      box-shadow: 0 20px 40px -15px rgba(37, 87, 167, 0.25);
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
+    }
+    .hero-banner h1 {
+      font-size: 2.2rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      margin-bottom: 0.5rem;
+    }
+    .hero-banner p {
+      opacity: 0.95;
+      font-size: 1.02rem;
+      max-width: 600px;
+      line-height: 1.5;
+    }
+    .hero-stats {
+      display: flex;
+      gap: 2rem;
+      margin-top: 1.5rem;
+      padding-top: 1.25rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    .hero-stat-item {
+      font-size: 0.88rem;
+      font-weight: 600;
+    }
+    .search-filter-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      padding: 1.75rem;
+      box-shadow: var(--shadow-elevation);
+      margin-bottom: 2rem;
+      position: relative;
+      z-index: 5;
+    }
+    .chip {
+      padding: 0.5rem 1rem !important;
+      border-radius: 10px !important;
+      font-weight: 600 !important;
+      transition: all 0.2s ease !important;
+      border: 1px solid var(--border-color) !important;
+      background: var(--bg-subtle) !important;
+      color: var(--text-secondary) !important;
+      cursor: pointer;
+      pointer-events: auto !important;
+    }
+    .chip.active {
+      background: var(--accent) !important;
+      color: white !important;
+      border-color: var(--accent) !important;
+    }
+    .layout-grid {
+      display: grid;
+      grid-template-columns: 380px 1fr 380px;
+      gap: 1.75rem;
+      align-items: start;
+    }
+    @media (max-width: 1280px) {
+      .layout-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    .map-column, .details-column {
+      position: sticky;
+      top: 1.5rem;
+      z-index: 2;
+    }
+    .map-card {
+      background: var(--bg-card);
+      border-radius: 20px !important;
+      overflow: hidden;
+      border: 1px solid var(--border-color);
+      box-shadow: var(--shadow-elevation);
+    }
+    .jobs-map {
+      width: 100%;
+      height: 520px;
+      z-index: 1;
+      display: block;
+    }
+    /* Ensure modal stays non-interactive when hidden */
+    .modal.hidden {
+      display: none !important;
+      pointer-events: none !important;
+    }
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1000;
+      background: rgba(0,0,0,0.5);
+    }
+  </style>
+</head>
+<body>
+  <!-- Header with high z-index to guarantee button clickability -->
+  <header class="navbar" style="backdrop-filter: blur(10px); background: var(--bg-card); border-bottom: 1px solid var(--border-color); position: relative; z-index: 100;">
+    <div class="nav-brand">
+      <span class="brand-name">JobFinder <strong>Near Me</strong></span>
+    </div>
+    <nav class="nav-links" style="display: flex; align-items: center; gap: 1rem; position: relative; z-index: 110;">
+      <a href="index.html" class="nav-link active">Find Jobs</a>
+      <a href="html/saved-jobs.html" class="nav-link">
+        Saved Jobs <span id="saved-count-badge" class="badge">0</span>
+      </a>
+      <a href="html/employer-portal.html" class="nav-link">Post a Job</a>
+      
+      <div id="auth-container" style="display: flex; align-items: center; gap: 0.5rem; pointer-events: auto;">
+        <a href="html/login.html" class="btn-secondary" style="padding: 0.5rem 1rem; border-radius: 10px; font-weight: 600; font-size: 0.88rem; text-decoration: none; display: inline-flex; align-items: center; pointer-events: auto; cursor: pointer;">Sign In</a>
+      </div>
+
+      <button id="theme-toggle" class="icon-btn" title="Toggle Dark Mode" style="font-size: 0.85rem; font-weight: 600; cursor: pointer; pointer-events: auto; position: relative; z-index: 120;">Theme</button>
+    </nav>
+  </header>
+
+  <main class="container" style="max-width: 1480px; padding: 2.5rem 1.5rem 5rem; position: relative; z-index: 3;">
+    <div class="hero-banner">
+      <div style="position: relative; z-index: 2;">
+        <h1>Find Local Jobs Nearby</h1>
+        <p>Explore geo-tagged career openings across Metro Cebu, filter by your preferred work setup, and apply directly.</p>
+        
+        <div class="hero-stats">
+          <div class="hero-stat-item">Live Geo-Distance Tracking</div>
+          <div class="hero-stat-item">&bull;</div>
+          <div class="hero-stat-item">Direct Application Portal</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="search-filter-card">
+      <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 1.5rem;">
+        <div style="flex: 1; min-width: 260px;">
+          <input type="text" id="keyword-input" placeholder="Search job title, company, or required skills..." style="width: 100%; padding: 0.85rem 1.1rem; border: 1px solid var(--border-color); border-radius: 12px; background: var(--bg-subtle); color: var(--text-primary); font-family: inherit; font-size: 0.95rem; outline: none; transition: border-color 0.2s; pointer-events: auto;" />
+        </div>
+        <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; pointer-events: auto;">
+          <select id="location-select" style="padding: 0.85rem 1.1rem; border: 1px solid var(--border-color); border-radius: 12px; background: var(--bg-subtle); color: var(--text-primary); font-family: inherit; font-weight: 600; font-size: 0.95rem; outline: none; cursor: pointer; pointer-events: auto;">
+            <option value="10.3308,123.9063">Cebu IT Park, Lahug</option>
+            <option value="10.3089,124.0016">Mactan Newtown, Lapu-Lapu</option>
+            <option value="10.3181,123.9056">Cebu Business Park (Ayala)</option>
+            <option value="10.3333,123.9333">Mandaue City Centro</option>
+            <option value="10.3236,123.9794">MEPZ 1, Lapu-Lapu</option>
+          </select>
+          <button id="use-gps-btn" class="btn-secondary" style="border-radius: 12px; font-weight: 600; padding: 0 1.25rem; cursor: pointer; pointer-events: auto;">Use GPS</button>
+        </div>
+      </div>
+
+      <div style="display: flex; justify-content: space-between; align-items: center; gap: 1.5rem; flex-wrap: wrap; padding-top: 1.25rem; border-top: 1px solid var(--border-color); pointer-events: auto;">
+        <div style="display: flex; gap: 1.5rem; flex-wrap: wrap; align-items: center;">
+          <div id="setup-chips" class="chip-group" style="display: flex; gap: 0.5rem; pointer-events: auto;">
+            <button class="chip active" data-setup="all">All Setups</button>
+            <button class="chip" data-setup="onsite">On-site</button>
+            <button class="chip" data-setup="hybrid">Hybrid</button>
+            <button class="chip" data-setup="remote">Remote</button>
+          </div>
+          <div id="type-chips" class="chip-group" style="display: flex; gap: 0.5rem; pointer-events: auto;">
+            <button class="chip active" data-type="all">All Types</button>
+            <button class="chip" data-type="full-time">Full-time</button>
+            <button class="chip" data-type="part-time">Part-time</button>
+          </div>
+        </div>
+        
+        <div style="display: flex; align-items: center; gap: 1.25rem; pointer-events: auto;">
+          <label style="font-size: 0.85rem; font-weight: 700; color: var(--text-secondary);">Radius: <span id="radius-value" style="color: var(--accent);">15 km</span></label>
+          <input type="range" id="radius-slider" min="2" max="50" value="15" style="accent-color: var(--accent); cursor: pointer; width: 110px; pointer-events: auto;" />
+          <input type="number" id="age-input" placeholder="Age" min="15" max="65" style="width: 75px; padding: 0.5rem 0.75rem; border: 1px solid var(--border-color); border-radius: 10px; background: var(--bg-subtle); color: var(--text-primary); font-family: inherit; pointer-events: auto;" title="Filter by minimum age requirement" />
+        </div>
+      </div>
+    </div>
+
+    <div class="layout-grid">
+      <div class="feed-column">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+          <h2 style="font-size: 1.2rem; font-weight: 800;">Available Openings</h2>
+          <span id="results-count" class="status-text" style="font-weight: 600;">0 jobs near you</span>
+        </div>
+        <div id="jobs-feed" class="jobs-feed"></div>
+      </div>
+
+      <div class="map-column">
+        <div class="map-card">
+          <div id="jobs-map" class="jobs-map"></div>
+        </div>
+      </div>
+
+      <div class="details-column">
+        <div id="job-details-panel" class="details-card" style="border-radius: 20px; box-shadow: var(--shadow-elevation);">
+          <div class="empty-details" style="padding: 3rem 1.5rem;">
+            <h3 style="font-size: 1.1rem; font-weight: 700;">Select a job listing</h3>
+            <p style="margin-top: 6px; font-size: 0.88rem; color: var(--text-secondary);">Click any card or map pin to inspect full description, requirements, and perks.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <div id="apply-modal" class="modal hidden">
+    <div class="modal-sheet" style="border-radius: 20px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);">
+      <button id="close-modal-btn" class="close-btn">&times;</button>
+      <div id="modal-body"></div>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script src="js/core/utils.js"></script>
+  <script src="js/core/storage.js"></script>
+  <script src="js/core/api.js"></script>
+  <script src="js/core/geo.js"></script>
+  <script src="js/core/auth.js"></script>
+  <script src="js/components/map.js"></script>
+  <script src="js/pages/home.js"></script>
+  <script>
+    // Force-disable pointer events on hidden overlays blocking clicks
+    document.addEventListener("DOMContentLoaded", () => {
+      document.querySelectorAll(".modal, .overlay, [id*='modal'], [class*='overlay']").forEach(el => {
+        if (el.classList.contains("hidden") || getComputedStyle(el).display === "none") {
+          el.style.pointerEvents = "none";
+        }
+      });
+    });
+
+    // Clean text results count
+    const resultsEl = document.getElementById("results-count");
+    if (resultsEl) {
+      const cleanText = () => {
+        if (resultsEl.textContent.includes("verified")) {
+          resultsEl.textContent = resultsEl.textContent.replace(/\s*verified\s*/gi, " ");
+        }
+      };
+      cleanText();
+      new MutationObserver(cleanText).observe(resultsEl, { childList: true, characterData: true, subtree: true });
+    }
+
+    // Theme toggle handler
+    const themeBtn = document.getElementById("theme-toggle");
+    const isStoredDark = (window.SavedStorage && SavedStorage.getTheme() === "dark") || localStorage.getItem("jf_theme") === "dark";
+    if (isStoredDark) {
+      document.documentElement.classList.add("dark-mode");
+      document.body.classList.add("dark-mode");
+      themeBtn.textContent = "Light";
+    } else {
+      themeBtn.textContent = "Dark";
+    }
+    
+    themeBtn.addEventListener("click", () => {
+      const isDark = document.documentElement.classList.toggle("dark-mode");
+      document.body.classList.toggle("dark-mode", isDark);
+      const themeVal = isDark ? "dark" : "light";
+      if (window.SavedStorage && SavedStorage.setTheme) SavedStorage.setTheme(themeVal);
+      localStorage.setItem("jf_theme", themeVal);
+      themeBtn.textContent = isDark ? "Light" : "Dark";
+    });
+  </script>
+</body>
+</html>

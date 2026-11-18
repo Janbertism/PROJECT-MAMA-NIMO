@@ -1,0 +1,153 @@
+<!-- File: html/login.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign In — JobFinder Near Me</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%232557a7'><path d='M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 010-5 2.5 2.5 0 010 5z'/></svg>" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="../css/components.css" />
+  <style>
+    html, body {
+      width: 100%;
+      max-width: 100% !important;
+      min-height: 100vh;
+      margin: 0 !important;
+      background-color: var(--bg-main, #f8fafc);
+    }
+    html.dark-mode,
+    body.dark-mode {
+      background-color: #0f172a !important;
+    }
+    body {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 1.5rem;
+      box-sizing: border-box;
+    }
+    .login-card {
+      width: 100%;
+      max-width: 440px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      padding: 2.5rem;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+      position: relative;
+      overflow: hidden;
+    }
+    .login-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: #2557a7;
+    }
+    .field-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+    .field-group label {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+    .field-group input {
+      width: 100%;
+      padding: 0.8rem 1rem;
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      background: var(--bg-subtle);
+      color: var(--text-primary);
+      font-family: inherit;
+      font-size: 0.95rem;
+      box-sizing: border-box;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .field-group input:focus {
+      border-color: #2557a7;
+      box-shadow: 0 0 0 3px rgba(37, 87, 167, 0.12);
+      background: var(--bg-card);
+    }
+    .row-2col {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 0.85rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-card">
+    <div style="text-align: center; margin-bottom: 1.75rem;">
+      <div style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 800; font-size: 1.25rem; color: #2557a7; margin-bottom: 0.5rem;">JobFinder Near Me</div>
+      <h1 style="font-size: 1.5rem; font-weight: 800; color: var(--text-primary); letter-spacing: -0.02em;">Sign In to Your Account</h1>
+      <p style="font-size: 0.88rem; color: var(--text-secondary); margin-top: 4px;">Enter your details to access your dashboard and personalized job matches.</p>
+    </div>
+
+    <form id="standalone-login-form" style="display: flex; flex-direction: column; gap: 1.1rem;">
+      <div class="row-2col">
+        <div class="field-group">
+          <label for="login-name">Full Name *</label>
+          <input type="text" id="login-name" placeholder="Maria Santos" required />
+        </div>
+
+        <div class="field-group">
+          <label for="login-age">Age *</label>
+          <input type="number" id="login-age" placeholder="22" min="15" max="75" required />
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label for="login-gmail">Gmail Address *</label>
+        <input type="email" id="login-gmail" placeholder="maria.santos@gmail.com" pattern=".+@gmail\.com$" title="Please enter a valid @gmail.com address" required />
+      </div>
+
+      <div class="field-group">
+        <label for="login-password">Password *</label>
+        <input type="password" id="login-password" placeholder="Enter your password" minlength="6" required />
+      </div>
+
+      <button type="submit" class="btn-primary" style="width: 100%; padding: 0.85rem; border-radius: 12px; font-weight: 700; font-size: 1rem; margin-top: 0.4rem; background: #2557a7;">Sign In to Dashboard</button>
+    </form>
+
+    <div style="text-align: center; margin-top: 1.5rem;">
+      <a href="../landing.html" style="font-size: 0.85rem; font-weight: 600; color: #2557a7; text-decoration: none;">&larr; Back to Home</a>
+    </div>
+  </div>
+
+  <script src="../js/core/storage.js"></script>
+  <script>
+    const isStoredDark = (window.SavedStorage && SavedStorage.getTheme() === "dark") || localStorage.getItem("jf_theme") === "dark";
+    if (isStoredDark) {
+      document.documentElement.classList.add("dark-mode");
+      document.body.classList.add("dark-mode");
+    }
+
+    document.getElementById("standalone-login-form").addEventListener("submit", (e) => {
+      e.preventDefault();
+      const name = document.getElementById("login-name").value.trim();
+      const age = Number(document.getElementById("login-age").value);
+      const email = document.getElementById("login-gmail").value.trim();
+      const password = document.getElementById("login-password").value;
+
+      if (name && age && email && password) {
+        localStorage.setItem(
+          "jf_user_profile",
+          JSON.stringify({ name, age, email })
+        );
+        window.location.href = "../index.html";
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,368 @@
+<!-- File: html/employer-portal.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Post a Job — JobFinder Near Me</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%232557a7'><path d='M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 010-5 2.5 2.5 0 010 5z'/></svg>" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="../css/components.css" />
+  <style>
+    :root {
+      --primary-gradient: linear-gradient(135deg, #2557a7 0%, #3b82f6 100%);
+      --shadow-elevation: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+    }
+    html, body {
+      min-height: 100vh;
+      margin: 0;
+      background-color: var(--bg-main, #f8fafc);
+      font-family: 'Inter', sans-serif;
+    }
+    html.dark-mode,
+    body.dark-mode {
+      background-color: #0f172a !important;
+    }
+    h1, h2, h3, .brand-name {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+    .portal-hero {
+      background: var(--primary-gradient);
+      color: white;
+      padding: 2.5rem;
+      border-radius: 20px;
+      margin-bottom: 2rem;
+      box-shadow: 0 20px 25px -5px rgba(37, 87, 167, 0.25);
+    }
+    .portal-hero h1 {
+      font-size: 2rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.4rem;
+    }
+    .portal-hero p {
+      opacity: 0.9;
+      font-size: 0.98rem;
+      max-width: 600px;
+    }
+    .portal-grid {
+      display: grid;
+      grid-template-columns: 1.45fr 1fr;
+      gap: 2rem;
+      align-items: start;
+    }
+    @media (max-width: 960px) {
+      .portal-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    .form-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      padding: 2.25rem;
+      box-shadow: var(--shadow-elevation);
+    }
+    .form-section-title {
+      font-size: 0.85rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #2557a7;
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+    body.dark-mode .form-section-title {
+      color: #60a5fa;
+    }
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
+      margin-bottom: 1.25rem;
+    }
+    @media (max-width: 600px) {
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+    }
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+      margin-bottom: 1.25rem;
+    }
+    .form-group label {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+    .form-control {
+      width: 100%;
+      padding: 0.8rem 1rem;
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      background: var(--bg-subtle);
+      color: var(--text-primary);
+      font-family: inherit;
+      font-size: 0.95rem;
+      box-sizing: border-box;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .form-control:focus {
+      border-color: #2557a7;
+      box-shadow: 0 0 0 3px rgba(37, 87, 167, 0.12);
+      background: var(--bg-card);
+    }
+    .managed-job-item {
+      padding: 1.25rem;
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      background: var(--bg-subtle);
+      margin-bottom: 1rem;
+    }
+    .toast-banner {
+      background: #10b981;
+      color: white;
+      padding: 1rem 1.25rem;
+      border-radius: 12px;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+    }
+    .toast-banner.hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <header class="navbar" style="backdrop-filter: blur(10px); background: var(--bg-card); border-bottom: 1px solid var(--border-color);">
+    <div class="nav-brand">
+      <span class="brand-name">JobFinder <strong>Near Me</strong></span>
+    </div>
+    <nav class="nav-links" style="display: flex; align-items: center; gap: 1rem;">
+      <a href="../index.html" class="nav-link">Find Jobs</a>
+      <a href="saved-jobs.html" class="nav-link">
+        Saved Jobs <span id="saved-count-badge" class="badge">0</span>
+      </a>
+      <a href="employer-portal.html" class="nav-link active">Post a Job</a>
+
+      <div id="auth-container" style="display: flex; align-items: center; gap: 0.5rem;">
+        <a href="login.html" class="btn-secondary" style="padding: 0.5rem 1rem; border-radius: 10px; font-weight: 600; font-size: 0.88rem; text-decoration: none; display: inline-flex; align-items: center;">Sign In</a>
+      </div>
+
+      <button id="theme-toggle" class="icon-btn" title="Toggle Dark Mode" style="font-size: 0.85rem; font-weight: 600; cursor: pointer;">Theme</button>
+    </nav>
+  </header>
+
+  <main class="container" style="max-width: 1280px; padding: 2.5rem 1.5rem 5rem;">
+    <div class="portal-hero">
+      <h1>Employer Hiring Portal</h1>
+      <p>Publish geo-tagged job openings across Metro Cebu and reach local candidates immediately on the live map feed.</p>
+    </div>
+
+    <div id="post-toast" class="toast-banner hidden">
+      Job published! Your listing is now live on the main map and job feed.
+    </div>
+
+    <div class="portal-grid">
+      <div class="form-card">
+        <form id="post-job-form">
+          <div class="form-section-title">1. Role & Company Details</div>
+          <div class="form-row">
+            <div class="form-group" style="margin-bottom:0;">
+              <label for="job-title">Job Title *</label>
+              <input type="text" id="job-title" class="form-control" placeholder="e.g. Junior Web Developer" required />
+            </div>
+            <div class="form-group" style="margin-bottom:0;">
+              <label for="job-company">Company Name *</label>
+              <input type="text" id="job-company" class="form-control" placeholder="e.g. Cebu Tech Solutions" required />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group" style="margin-bottom:0;">
+              <label for="job-salary">Monthly Salary Range *</label>
+              <input type="text" id="job-salary" class="form-control" placeholder="e.g. PHP 25,000 - 35,000" required />
+            </div>
+            <div class="form-group" style="margin-bottom:0;">
+              <label for="job-min-age">Minimum Age Requirement *</label>
+              <input type="number" id="job-min-age" class="form-control" value="18" min="15" max="60" required />
+            </div>
+          </div>
+
+          <div class="form-section-title" style="margin-top: 1.75rem;">2. Location & Work Arrangement</div>
+          <div class="form-row">
+            <div class="form-group" style="margin-bottom:0;">
+              <label for="job-hub">Metro Cebu Location Hub *</label>
+              <select id="job-hub" class="form-control">
+                <option value="10.3308,123.9063|Cebu IT Park, Lahug">Cebu IT Park, Lahug</option>
+                <option value="10.3089,124.0016|Mactan Newtown, Lapu-Lapu">Mactan Newtown, Lapu-Lapu</option>
+                <option value="10.3181,123.9056|Cebu Business Park (Ayala)">Cebu Business Park (Ayala)</option>
+                <option value="10.3333,123.9333|Mandaue City Centro">Mandaue City Centro</option>
+                <option value="10.3236,123.9794|MEPZ 1, Lapu-Lapu">MEPZ 1, Lapu-Lapu</option>
+              </select>
+            </div>
+            <div class="form-group" style="margin-bottom:0;">
+              <label for="job-setup">Work Setup *</label>
+              <select id="job-setup" class="form-control">
+                <option value="onsite">On-site</option>
+                <option value="hybrid">Hybrid</option>
+                <option value="remote">Remote</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="job-type">Employment Type *</label>
+            <select id="job-type" class="form-control">
+              <option value="full-time">Full-time</option>
+              <option value="part-time">Part-time</option>
+            </select>
+          </div>
+
+          <div class="form-section-title" style="margin-top: 1.75rem;">3. Job Description & Skills</div>
+          <div class="form-group">
+            <label for="job-desc">Job Summary & Responsibilities *</label>
+            <textarea id="job-desc" class="form-control" rows="4" placeholder="Describe daily responsibilities, team environment, and key expectations..." required></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="job-reqs">Requirements (comma-separated) *</label>
+            <input type="text" id="job-reqs" class="form-control" placeholder="e.g. HTML/CSS, JavaScript, Good communication, Willing to work in Lahug" required />
+          </div>
+
+          <button type="submit" class="btn-primary" style="width: 100%; padding: 0.9rem; font-size: 1rem; font-weight: 700; border-radius: 12px; margin-top: 0.5rem; background: #2557a7;">Publish Job Listing</button>
+        </form>
+      </div>
+
+      <div class="form-card" style="position: sticky; top: 1.5rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
+          <h2 style="font-size: 1.2rem; font-weight: 800; margin: 0;">Your Posted Jobs</h2>
+          <span id="custom-count" class="badge">0</span>
+        </div>
+        <div id="managed-jobs-list"></div>
+      </div>
+    </div>
+  </main>
+
+  <script src="../js/core/utils.js"></script>
+  <script src="../js/core/storage.js"></script>
+  <script src="../js/core/auth.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const badge = document.getElementById("saved-count-badge");
+      if (badge && window.SavedStorage) {
+        badge.textContent = Object.keys(SavedStorage.load()).length;
+      }
+
+      // Theme toggle initialization and handler
+      const themeBtn = document.getElementById("theme-toggle");
+      const isStoredDark = (window.SavedStorage && SavedStorage.getTheme() === "dark") || localStorage.getItem("jf_theme") === "dark";
+      
+      if (isStoredDark) {
+        document.documentElement.classList.add("dark-mode");
+        document.body.classList.add("dark-mode");
+        themeBtn.textContent = "Light";
+      } else {
+        themeBtn.textContent = "Dark";
+      }
+
+      themeBtn.addEventListener("click", () => {
+        const isDark = document.documentElement.classList.toggle("dark-mode");
+        document.body.classList.toggle("dark-mode", isDark);
+        const themeVal = isDark ? "dark" : "light";
+        if (window.SavedStorage && SavedStorage.setTheme) {
+          SavedStorage.setTheme(themeVal);
+        }
+        localStorage.setItem("jf_theme", themeVal);
+        themeBtn.textContent = isDark ? "Light" : "Dark";
+      });
+
+      function renderCustomJobs() {
+        const listEl = document.getElementById("managed-jobs-list");
+        const countEl = document.getElementById("custom-count");
+        const customJobs = window.SavedStorage ? SavedStorage.loadCustomJobs() : [];
+        countEl.textContent = customJobs.length;
+
+        if (!customJobs.length) {
+          listEl.innerHTML = `<p style="color: var(--text-secondary); font-size: 0.9rem; text-align: center; padding: 2rem 0;">No custom jobs posted yet. Fill out the form to publish your first listing.</p>`;
+          return;
+        }
+
+        listEl.innerHTML = customJobs.map((job) => `
+          <div class="managed-job-item">
+            <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:0.5rem;">
+              <div>
+                <h4 style="font-weight: 800; font-size: 1rem; margin-bottom: 2px;">${job.title}</h4>
+                <div style="font-size: 0.82rem; color: var(--text-secondary);">${job.company} &bull; ${job.locationName}</div>
+              </div>
+              <button class="delete-custom-btn" data-id="${job.id}" style="background:none; border:none; color:#dc2626; font-weight:700; cursor:pointer; font-size:0.85rem;" title="Delete Listing">Delete</button>
+            </div>
+            <div style="margin-top: 0.65rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+              <span style="font-size: 0.75rem; font-weight: 700; background: var(--accent-soft); color: var(--accent); padding: 2px 8px; border-radius: 6px;">${job.salary}</span>
+              <span style="font-size: 0.75rem; font-weight: 600; background: var(--bg-card); border: 1px solid var(--border-color); padding: 2px 8px; border-radius: 6px;">${job.setup}</span>
+            </div>
+          </div>
+        `).join("");
+
+        listEl.querySelectorAll(".delete-custom-btn").forEach((btn) => {
+          btn.addEventListener("click", (e) => {
+            const id = e.currentTarget.dataset.id;
+            if (window.SavedStorage && SavedStorage.deleteCustomJob) {
+              SavedStorage.deleteCustomJob(id);
+            } else {
+              const remaining = customJobs.filter((j) => String(j.id) !== String(id));
+              localStorage.setItem("jobfinder_custom_jobs", JSON.stringify(remaining));
+            }
+            renderCustomJobs();
+          });
+        });
+      }
+
+      document.getElementById("post-job-form").addEventListener("submit", (e) => {
+        e.preventDefault();
+        const [coordsStr, locationName] = document.getElementById("job-hub").value.split("|");
+        const [lat, lng] = coordsStr.split(",").map(Number);
+
+        const newJob = {
+          id: "custom-" + Date.now(),
+          title: document.getElementById("job-title").value.trim(),
+          company: document.getElementById("job-company").value.trim(),
+          salary: document.getElementById("job-salary").value.trim(),
+          minAge: Number(document.getElementById("job-min-age").value) || 18,
+          lat: lat + (Math.random() - 0.5) * 0.004,
+          lng: lng + (Math.random() - 0.5) * 0.004,
+          locationName,
+          setup: document.getElementById("job-setup").value,
+          type: document.getElementById("job-type").value,
+          postedAt: "Just now",
+          description: document.getElementById("job-desc").value.trim(),
+          requirements: document.getElementById("job-reqs").value.split(",").map((s) => s.trim()).filter(Boolean)
+        };
+
+        if (window.SavedStorage && SavedStorage.addCustomJob) {
+          SavedStorage.addCustomJob(newJob);
+        } else {
+          const existing = JSON.parse(localStorage.getItem("jobfinder_custom_jobs") || "[]");
+          existing.unshift(newJob);
+          localStorage.setItem("jobfinder_custom_jobs", JSON.stringify(existing));
+        }
+
+        e.target.reset();
+        renderCustomJobs();
+
+        const toast = document.getElementById("post-toast");
+        toast.classList.remove("hidden");
+        setTimeout(() => toast.classList.add("hidden"), 4000);
+      });
+
+      renderCustomJobs();
+    });
+  </script>
+</body>
+</html>
